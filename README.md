@@ -2,7 +2,7 @@
 
 ## Constantes globales
 
-`constants.py` (en la raíz del repositorio) contiene el diccionario `cte` con las constantes físicas y del sistema usadas en los análisis. Se copió de `Suceptibilities/Suceptibilidades_Doppler.ipynb`.
+`constants.py` (en la raíz del repositorio) contiene el diccionario `cte` con las constantes físicas y del sistema usadas en los análisis.
 
 Las unidades van en el nombre de cada clave:
 
