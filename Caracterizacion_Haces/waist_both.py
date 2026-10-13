@@ -19,7 +19,7 @@ def w_beam(z, w_0, z_0, z_R):
 
 def procesar_laser(carpeta_laser, cortar_al_final=2, n_puntos=20):
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    search_path = os.path.join(script_dir, "data4", carpeta_laser, "z*mm.xlsx")
+    search_path = os.path.join(script_dir, "data", carpeta_laser, "z*mm.xlsx")
     archivos = glob.glob(search_path)
     
     posiciones = []

@@ -13,23 +13,23 @@ mpl.rcParams['text.usetex'] = False
 dataFrames_datos = {}
 N = 20 # Número de datos tomados ajustados en el logsetup
 
-# --- NEW VARIABLE HERE ---
+# --- CORTAR PUNTOS AL FINAL ---
 CORTAR_AL_FINAL = 2 # Cambia este número para borrar los últimos N puntos de la medición
-# -------------------------
+# ------------------------------
 
 posiciones = []
 
 # Construct the absolute path dynamically
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Update the folder and file search pattern to 852nm
-search_path = os.path.join(script_dir, "data4", "852nm", "z*mm.xlsx")
+# 1. Update the folder and file search pattern to 822nm
+search_path = os.path.join(script_dir, "data","822nm", "z*mm.xlsx")
 
 archivos = glob.glob(search_path)
-j = 0
+
 for archivo in archivos:
     nombre_archivo = os.path.basename(archivo)
     
-    # Update regex to look for "852nm"
+    # 2. Update regex to look for "822nm"
     match = re.search(r"z(\d+(\.\d+)?)mm\.xlsx", nombre_archivo)
     if match:
         posicion = float(match.group(1))
@@ -37,8 +37,10 @@ for archivo in archivos:
 
         # Read the file, skipping the 21 rows of BeamMaster metadata
         df = pd.read_excel(archivo, skiprows=21)
+        
         # Drop the first row (index 0) which contains the text units like '(micron)'
         df = df.drop(0).reset_index(drop=True)
+        
         # Clean the comma decimals so Python can do math on them
         cols_to_convert = ["W Width I", "V Width I"]
         for col in cols_to_convert:
@@ -50,13 +52,13 @@ for archivo in archivos:
 # Sort the positions so the x-axis arrays and linspace are ordered correctly
 posiciones.sort()
 
-# --- NEW CUTTING LOGIC HERE ---
+# --- CUTTING LOGIC ---
 if CORTAR_AL_FINAL > 0:
     lista_posiciones = posiciones[:-CORTAR_AL_FINAL] # Slices off the last N points
     print(f"Ignorando los últimos {CORTAR_AL_FINAL} puntos. Puntos restantes: {len(lista_posiciones)}")
 else:
     lista_posiciones = posiciones
-# ------------------------------
+# ---------------------
 
 # Pre-allocate arrays
 W_width_I = np.zeros_like(lista_posiciones, dtype=float)
@@ -76,7 +78,6 @@ for i, posicion in enumerate(lista_posiciones):
 
 # Convert variables to SI units / processing units
 z = np.array(lista_posiciones) * 1e-3
-
 # Gaussian Beam Formula
 def w(z, w_0, z_0, z_R):
     return w_0 * np.sqrt(1 + ((z - z_0) / z_R)**2)
@@ -108,13 +109,14 @@ if len(lista_posiciones) > 0:
 # Graph labels and styling
 plt.xlabel(r"Position in propagation axis $z$ [mm]")
 plt.ylabel(r"Beam waist $w(z)$ [$\mu$m]")
-plt.title("Beam Characterization - 852nm Laser")
+# 3. Update title to 822nm
+plt.title("Beam Characterization - 822nm Laser")
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
 
-# Save and show
-plt.savefig("852nm_beam_waist_fit.png")
+# 4. Update the savefile to 822nm
+plt.savefig("822nm_beam_waist_fit.png")
 
 # --- IMPRESIÓN DE PARÁMETROS AJUSTADOS ---
 print("\n" + "="*40)
