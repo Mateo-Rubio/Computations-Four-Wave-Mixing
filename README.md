@@ -158,7 +158,7 @@ Cada carpeta tiene su propio `README.md`. Ahí se explica en qué consiste el ex
 ```bash
 python -m venv .venv
 .venv\Scripts\activate            # Windows
-pip install numpy scipy matplotlib pandas openpyxl jupyter
+pip install numpy scipy matplotlib pandas openpyxl ipykernel
 ```
 
 Los notebooks se abren **desde su propia carpeta** (por ejemplo `cd Rama_A/Deteccion_852`). Cada uno agrega la raíz del repositorio a `sys.path` con `sys.path.append('../..')` para importar `constants.py`, y lee sus datos con rutas relativas (`data/...`). En Colab, primero hay que clonar el repositorio y luego hacer `%cd` a la subcarpeta. Los scripts de `Caracterizacion_Haces/` buscan sus datos en `data/` junto al script.

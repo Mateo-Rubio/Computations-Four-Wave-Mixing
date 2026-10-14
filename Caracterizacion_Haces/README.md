@@ -12,7 +12,7 @@ Un perfilador de haz (BeamMaster) se coloca en varias posiciones z a lo largo de
 |---|---|---|
 | `822.py` | Ajusta el haz de 822 nm. Pide la potencia (mW) por consola y calcula la intensidad pico en el foco, $I_0 = 2P/(\pi w_{0W} w_{0V})$, en mW/cm² y W/cm². | `822nm_beam_waist_fit.png` |
 | `852.py` | Lo mismo para el haz de 852 nm. | `852nm_beam_waist_fit.png` |
-| `waist_both.py` | Ajusta ambos haces, los compara en una sola figura, grafica la evolución de los centroides y exporta las tablas de parámetros a LaTeX. | `comparacion_haces_852_822.png`, `evolucion_centroides_852_822.png`, `caracteristicas_haces.tex` |
+| `waist_both.py` | Ajusta ambos haces, los compara en una sola figura y grafica la evolución de los centroides. | `comparacion_haces_852_822.png`, `evolucion_centroides_852_822.png` |
 
 Procedimiento común a los tres:
 1. El radio en cada posición es el ancho del perfilador dividido entre 2 (de µm a m). Se toma la media ± desviación estándar de las 20 lecturas.

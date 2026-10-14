@@ -17,31 +17,37 @@ LEGEND_SIZE = 20
 def w_beam(z, w_0, z_0, z_R):
     return w_0 * np.sqrt(1 + ((z - z_0) / z_R)**2)
 
-def procesar_laser(carpeta_laser, cortar_al_final=2, n_puntos=20):
+def leer_beammaster(archivo):
+    # La fila de encabezados es la que empieza con "Time"; la siguiente son las unidades
+    crudo = pd.read_excel(archivo, header=None, usecols=[0])
+    fila_encabezado = crudo.index[crudo[0].astype(str).str.strip() == "Time"][0]
+
+    df = pd.read_excel(archivo, skiprows=fila_encabezado)
+    df = df.drop(0).reset_index(drop=True)
+
+    for col in ["W Width I", "V Width I", "Pos.X", "Pos.Y"]:
+        df[col] = df[col].astype(str).str.replace(',', '.').astype(float)
+    return df
+
+def procesar_laser(laser, cortar_al_final=0, n_puntos=20):
+    # Los archivos se llaman z<posición>mm-<láser>.xlsx, p. ej. z12mm-822.xlsx
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    search_path = os.path.join(script_dir, "data", carpeta_laser, "z*mm.xlsx")
+    search_path = os.path.join(script_dir, "data", f"z*mm-{laser}.xlsx")
     archivos = glob.glob(search_path)
-    
+
     posiciones = []
     dataframes = {}
-    
+
     for archivo in archivos:
         nombre_archivo = os.path.basename(archivo)
-        match = re.search(r"z(\d+(\.\d+)?)mm\.xlsx", nombre_archivo)
+        match = re.fullmatch(rf"z(\d+(\.\d+)?)mm-{laser}\.xlsx", nombre_archivo)
         if match:
             posicion = float(match.group(1))
-            if(posicion > 14):
-                posiciones.append(posicion)
-                
-                df = pd.read_excel(archivo, skiprows=21)
-                df = df.drop(0).reset_index(drop=True)
-                
-                # Se añaden Pos.X y Pos.Y a la limpieza de formato
-                for col in ["W Width I", "V Width I", "Pos.X", "Pos.Y"]:
-                    df[col] = df[col].astype(str).str.replace(',', '.').astype(float)
-                    
-                dataframes[posicion] = df.head(n_puntos)
-            
+            posiciones.append(posicion)
+            dataframes[posicion] = leer_beammaster(archivo).head(n_puntos)
+
+    if not posiciones:
+        raise FileNotFoundError(f"No se encontraron archivos z*mm-{laser}.xlsx en {os.path.dirname(search_path)}")
     posiciones.sort()
     
     if cortar_al_final > 0 and len(posiciones) > cortar_al_final:
@@ -114,8 +120,15 @@ def procesar_laser(carpeta_laser, cortar_al_final=2, n_puntos=20):
         "v_fit": v_fit
     }
 
-res_852 = procesar_laser("852nm", cortar_al_final=2)
-res_822 = procesar_laser("822nm", cortar_al_final=2)
+res_852 = procesar_laser("852", cortar_al_final=0)
+res_822 = procesar_laser("822", cortar_al_final=0)
+
+for nombre, res in (("822 nm", res_822), ("852 nm", res_852)):
+    print(f"\n--- Láser {nombre} ({len(res['z_exp'])} posiciones) ---")
+    for eje, p, e in (("W", res["params_w"], res["err_w"]), ("V", res["params_v"], res["err_v"])):
+        print(f"{eje}: w_0 = {p[0]*1e6:.2f} ± {e[0]*1e6:.2f} µm, "
+              f"z_0 = {p[1]*1e3:.2f} ± {e[1]*1e3:.2f} mm, "
+              f"z_R = {p[2]*1e3:.2f} ± {e[2]*1e3:.2f} mm")
 
 # ==============================================================================
 # 1. GRÁFICAS DE ANCHO (CINTURAS W y V)
@@ -191,56 +204,6 @@ plt.tight_layout()
 plt.savefig("evolucion_centroides_852_822.png", dpi=300)
 plt.close()
 
-# ==============================================================================
-# 3. TABLAS LATEX
-# ==============================================================================
-def formato_parametro(val, err, factor):
-    return f"{val*factor:.2f} \\pm {err*factor:.2f}"
-
-# Tabla Horizontal
-tabla_latex_w = f"""\\begin{{table}}[htbp]
-\\centering
-\\caption{{Caracteristicas espaciales de los laseres incidentes en el eje horizontal ($W$).}}
-\\label{{tab:caracteristicas_haces_w}}
-\\begin{{tabular}}{{lcc}}
-\\hline
-\\hline
-Parámetro & Láser 822 nm & Láser 852 nm \\\\
-\\hline
-Cintura del haz ($w_0$) [$\\mu$m] & ${formato_parametro(res_822['params_w'][0], res_822['err_w'][0], 1e6)}$ & ${formato_parametro(res_852['params_w'][0], res_852['err_w'][0], 1e6)}$ \\\\
-Posición focal ($z_0$) [mm] & ${formato_parametro(res_822['params_w'][1], res_822['err_w'][1], 1e3)}$ & ${formato_parametro(res_852['params_w'][1], res_852['err_w'][1], 1e3)}$ \\\\
-Rango de Rayleigh ($z_R$) [mm] & ${formato_parametro(res_822['params_w'][2], res_822['err_w'][2], 1e3)}$ & ${formato_parametro(res_852['params_w'][2], res_852['err_w'][2], 1e3)}$ \\\\
-\\hline
-\\hline
-\\end{{tabular}}
-\\end{{table}}
-"""
-
-# Tabla Vertical
-tabla_latex_v = f"""\\begin{{table}}[htbp]
-\\centering
-\\caption{{Caracteristicas espaciales de los laseres incidentes en el eje vertical ($V$).}}
-\\label{{tab:caracteristicas_haces_v}}
-\\begin{{tabular}}{{lcc}}
-\\hline
-\\hline
-Parámetro & Láser 822 nm & Láser 852 nm \\\\
-\\hline
-Cintura del haz ($w_0$) [$\\mu$m] & ${formato_parametro(res_822['params_v'][0], res_822['err_v'][0], 1e6)}$ & ${formato_parametro(res_852['params_v'][0], res_852['err_v'][0], 1e6)}$ \\\\
-Posición focal ($z_0$) [mm] & ${formato_parametro(res_822['params_v'][1], res_822['err_v'][1], 1e3)}$ & ${formato_parametro(res_852['params_v'][1], res_852['err_v'][1], 1e3)}$ \\\\
-Rango de Rayleigh ($z_R$) [mm] & ${formato_parametro(res_822['params_v'][2], res_822['err_v'][2], 1e3)}$ & ${formato_parametro(res_852['params_v'][2], res_852['err_v'][2], 1e3)}$ \\\\
-\\hline
-\\hline
-\\end{{tabular}}
-\\end{{table}}
-"""
-
-with open("caracteristicas_haces.tex", "w", encoding="utf-8") as f:
-    f.write(tabla_latex_w)
-    f.write("\n")
-    f.write(tabla_latex_v)
-
 print("Procesamiento completado.")
 print("Grafica de anchos guardada como: comparacion_haces_852_822.png")
 print("Grafica de centroides guardada como: evolucion_centroides_852_822.png")
-print("Tabla LaTeX guardada como: caracteristicas_haces.tex")
