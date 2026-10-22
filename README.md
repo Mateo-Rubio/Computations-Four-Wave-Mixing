@@ -23,7 +23,7 @@ La conservación de la energía, $2\omega_1 = \omega_2 + \omega_3$, y el ajuste 
 | Resonancia de la señal | $\Delta_3 - i\gamma_{ba}$ | $\delta_2 - i\gamma_{cb}$ |
 | Absorción lineal | la **señal** de 852 nm se reabsorbe | la señal de 794 nm no se absorbe a primer orden; se absorbe la **semilla** de 852 nm |
 | Perillas del laboratorio | $\omega_1$ (822) y $\omega_2$ (794) | $\omega_1$ (822) y $\omega_3$ (852) |
-| Estado | teoría y experimento en curso | teoría derivada; falta implementarla numérica y experimentalmente |
+| Estado | teoría y experimento en curso | teoría derivada; fluorescencia y primera detección a 794 nm medidas (sin señal); falta la evaluación numérica |
 
 ## Teoría
 
@@ -119,7 +119,9 @@ Los términos $\propto |\tilde E_3|^2\tilde E_2$ son la reacción del medio sobr
 | Evaluación numérica de $\chi^{(3)}_B$ en el plano de las perillas (Δ2, Δ3) | Pendiente | [`Rama_B/Teoria/`](Rama_B/Teoria/) |
 | Propagación con semilla de 852 nm absorbida y promedio Doppler | Pendiente | [`Rama_B/Teoria/`](Rama_B/Teoria/) |
 | $\gamma_{cb}$ en `constants.py` | Pendiente. En el límite puramente radiativo, $\gamma_{cb} = \gamma_{ba} + \gamma_{ca}$ | — |
-| Montaje: 822 + semilla de 852 nm copropagantes; detección hacia adelante a 794 nm (monocromador en 794 nm → SPCM), con el PMT lateral marcando Δ2 = 0 | Pendiente | [`Rama_B/Fluorescencia/`](Rama_B/Fluorescencia/), [`Rama_B/Deteccion_794/`](Rama_B/Deteccion_794/) |
+| Fluorescencia (PMT): 822 solo, 852 solo y 852 con el 822 fijo, de 50 a 80 °C | Hecho | [`Rama_B/Fluorescencia/`](Rama_B/Fluorescencia/) |
+| Detección directa a 794 nm (monocromador → SPCM), 60 °C | Medido: sin señal; el fondo de B es luz de 852 y 822 que el monocromador no rechaza | [`Rama_B/Deteccion_794/`](Rama_B/Deteccion_794/) |
+| Calibración del monocromador en 794 nm y filtro interferencial antes de la fibra | Pendiente | — |
 
 ## Estructura del repositorio
 
@@ -139,10 +141,14 @@ Los términos $\propto |\tilde E_3|^2\tilde E_2$ son la reacción del medio sobr
 │   └── Deteccion_852/              # etapa 2: monocromador a 852 nm + SPCM
 │       ├── FWM.ipynb
 │       └── data/2026-09-07/
-└── Rama_B/                         # semilla 852 → señal 794 (todavía sin datos)
+└── Rama_B/                         # semilla 852 → señal 794
     ├── Teoria/
-    ├── Fluorescencia/data/
-    └── Deteccion_794/data/
+    ├── Fluorescencia/              # PMT: 822 solo, 852 solo y 852 con el 822 fijo
+    │   ├── fluorescencia.ipynb, fluorescencia_temperatura.ipynb
+    │   └── data/
+    └── Deteccion_794/              # monocromador + SPCM hacia adelante, 852 barrido con el 822 fijo
+        ├── FWM.ipynb
+        └── data/
 ```
 
 Cada carpeta tiene su propio `README.md`. Ahí se explica en qué consiste el experimento o el cálculo, cómo se ajustan los datos, la estructura interna de los archivos de medida y el formato de sus nombres:

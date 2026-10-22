@@ -1,6 +1,6 @@
 # Rama B: se siembra 852 nm, se genera 794 nm
 
-**Estado:** hay datos y análisis de fluorescencia en [`Fluorescencia/`](Fluorescencia/). Las demás carpetas solo tienen la estructura, con la misma organización que la [Rama A](../Rama_A/).
+**Estado:** hay datos y análisis de fluorescencia en [`Fluorescencia/`](Fluorescencia/) y de la detección directa a 794 nm en [`Deteccion_794/`](Deteccion_794/), donde no se detecta señal porque el fondo es luz de 852 y 822 nm que el monocromador no rechaza. [`Teoria/`](Teoria/) solo tiene la estructura, con la misma organización que la [Rama A](../Rama_A/).
 
 El bombeo de 822 nm lleva los átomos de 6S1/2 a 8S1/2 por absorción de dos fotones, y la semilla de 852 nm (6S1/2 ↔ 6P3/2) cierra el lazo. El medio radía el campo de 794 nm (8S1/2 → 6P3/2) en la dirección de ajuste de fase, $2k_1 - k_3 = k_2$, hacia adelante.
 
@@ -17,14 +17,14 @@ La derivación está en el [README principal](../README.md#rama-b-se-genera-794-
 
 ## Carpetas
 
-| Carpeta | Contenido previsto |
-|---|---|
-| [`Teoria/`](Teoria/) | Evaluación numérica de $\chi^{(3)}_B$, propagación con semilla absorbida y promedio Doppler |
-| [`Fluorescencia/`](Fluorescencia/) | Fluorescencia azul (PMT): barridos del 822 solo, del 852 solo y del 852 con el 822 fijo |
-| [`Deteccion_794/`](Deteccion_794/) | Detección directa hacia adelante a 794 nm (monocromador + SPCM) |
+| Carpeta | Contenido | Estado |
+|---|---|---|
+| [`Teoria/`](Teoria/) | Evaluación numérica de $\chi^{(3)}_B$, propagación con semilla absorbida y promedio Doppler | Pendiente |
+| [`Fluorescencia/`](Fluorescencia/) | Fluorescencia azul (PMT): barridos del 822 solo, del 852 solo y del 852 con el 822 fijo | Hecho |
+| [`Deteccion_794/`](Deteccion_794/) | Detección directa hacia adelante a 794 nm (monocromador + SPCM), con el 852 barrido y el 822 fijo | Medido: sin señal por encima del fondo de 852 y 822 nm |
 
-## Pendiente antes de empezar
+## Pendiente
 
 - Agregar $\gamma_{cb}$ a [`constants.py`](../constants.py). En el límite puramente radiativo, $\gamma_{cb} = \gamma_{ba} + \gamma_{ca}$.
-- Definir el montaje: la semilla de 852 nm (el haz caracterizado en [`../Caracterizacion_Haces/`](../Caracterizacion_Haces/)) copropagante con el 822 y sin el láser de 794 nm.
+- Calibrar el monocromador en 794 nm y bloquear el 822 y el 852 antes de la fibra con un filtro interferencial (ver [`Deteccion_794/`](Deteccion_794/)).
 - Tener en cuenta el efecto abierto de una semilla resonante con la D2, que puebla 6P3/2 y va más allá del orden perturbativo usado.
