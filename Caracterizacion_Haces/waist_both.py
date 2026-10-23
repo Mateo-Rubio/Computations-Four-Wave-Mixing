@@ -32,7 +32,7 @@ def leer_beammaster(archivo):
 def procesar_laser(laser, cortar_al_final=0, n_puntos=20):
     # Los archivos se llaman z<posición>mm-<láser>.xlsx, p. ej. z12mm-822.xlsx
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    search_path = os.path.join(script_dir, "data", f"z*mm-{laser}.xlsx")
+    search_path = os.path.join(script_dir, "old-data", f"z*mm-{laser}.xlsx")
     archivos = glob.glob(search_path)
 
     posiciones = []
