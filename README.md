@@ -188,6 +188,10 @@ Las unidades van en el nombre de cada clave (todo en SI):
 | `nu_ba[Hz]`, `nu_ca[Hz]` | Frecuencias de transición 6S1/2 → 6P3/2 (D2) y 6S1/2 → 8S1/2 |
 | `gamma_ba[rad/s]`, `gamma_ca[rad/s]` | Tasas de decaimiento de las coherencias ba y ca |
 | `tau_8S[s]` | Vida media del nivel 8S1/2 |
+| `d_D2[C*m]` | Elemento reducido de la D2, $\langle J=1/2\Vert e\mathbf r\Vert J'=3/2\rangle$ (Steck) |
+| `L_celda[m]` | Longitud de la celda de Cs (por verificar) |
+| `Pv_A_sol`, `Pv_B_sol[K]`, `Pv_A_liq`, `Pv_B_liq[K]` | Presión de vapor del Cs (Steck): $\log_{10}(P/\mathrm{Torr}) = A - B/T$, fases sólida y líquida |
+| `T_fus[K]`, `Torr[Pa]` | Punto de fusión del Cs y conversión Torr → Pa |
 
 $\gamma_{cb}$, que necesita la Rama B, todavía no está definida.
 
@@ -201,6 +205,9 @@ $\gamma_{cb}$, que necesita la Rama B, todavía no está definida.
 | `lmd1`, `lmd2`, `lmd3` | Longitudes de onda en resonancia: 822, 794 y 852 nm [m] |
 | `k1`, `k2`, `k3` | Números de onda correspondientes [rad/m] |
 | `u` | Velocidad térmica más probable del Cs [m/s] |
+| `mu_ba` | Dipolo de dos niveles de la D2, $\lvert\langle J\Vert e\mathbf r\Vert J'\rangle\rvert/\sqrt2$, que reproduce $\Gamma_{D2} = 2\gamma_{ba}$ [C·m] |
+| `L_celda` | Atajo de `L_celda[m]` [m] |
+| `n_Cs(T)` | Función: densidad de Cs [m⁻³] a la temperatura de la celda `T` [K], a partir de la presión de vapor |
 
 ### Uso
 

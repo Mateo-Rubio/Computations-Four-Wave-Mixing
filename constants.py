@@ -13,6 +13,10 @@ cte = {
     # ---------- Decaimientos ----------
     "gamma_ba[rad/s]": np.pi*5.2227e6,        # Gamma_D2/2, Gamma_D2 = 2pi x 5.2227 MHz
     "tau_8S[s]":       104e-9,
+    # ---------- Momento dipolar de la D2 ----------
+    "d_D2[C*m]":    3.7971e-29,               # elemento reducido <J=1/2||er||J'=3/2> (Steck, Cesium D Line Data)
+    # ---------- Celda ----------
+    "L_celda[m]":   0.075,                    # longitud de la celda de Cs (VERIFICAR con la celda del laboratorio)
 }
 cte["gamma_ca[rad/s]"] = 1/(2*cte["tau_8S[s]"])
 
@@ -32,3 +36,19 @@ k1, k2, k3 = 2*np.pi/lmd1, 2*np.pi/lmd2, 2*np.pi/lmd3
 
 # Velocidad térmica más probable de los átomos de Cs  [m/s]
 u = np.sqrt(2*kB*cte["T[K]"]/cte["m_Cs[kg]"])
+
+# Momento dipolar efectivo del sistema de dos niveles |a> <-> |b> (D2)  [C*m]
+# |mu_ba|^2 = (2J+1)/(2J'+1) |<J||er||J'>|^2 = |<J||er||J'>|^2/2: con él, la emisión
+# espontánea w_ba^3 |mu_ba|^2/(3 pi eps0 hbar c^3) reproduce Gamma_D2 = 2 g_ba.
+mu_ba = cte["d_D2[C*m]"]/np.sqrt(2)
+
+# Longitud de la celda  [m]
+L_celda = cte["L_celda[m]"]
+
+def n_Cs(T):
+    """Densidad de Cs [m^-3], Cs líquido. Alcock, Itkin y Horrigan,
+    Can. Metall. Q. 23, 309 (1984). T en °C, válida de 28.44 °C a ~277 °C."""
+    T_K = T + 273.15
+    log_p_atm = 8.232 - 4062/T_K - 1.3359*np.log10(T_K)
+    p = 101325 * 10**log_p_atm        # Pa
+    return p/(kB*T_K)                  # m^-3
