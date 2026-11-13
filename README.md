@@ -23,7 +23,7 @@ La conservación de la energía, $2\omega_1 = \omega_2 + \omega_3$, y el ajuste 
 | Resonancia de la señal | $\Delta_3 - i\gamma_{ba}$ | $\delta_2 - i\gamma_{cb}$ |
 | Absorción lineal | la **señal** de 852 nm se reabsorbe | la señal de 794 nm no se absorbe a primer orden; se absorbe la **semilla** de 852 nm |
 | Perillas del laboratorio | $\omega_1$ (822) y $\omega_2$ (794) | $\omega_1$ (822) y $\omega_3$ (852) |
-| Estado | teoría y experimento en curso | teoría derivada; fluorescencia y primera detección a 794 nm medidas (sin señal); falta la evaluación numérica |
+| Estado | teoría y experimento en curso | teoría derivada y evaluada para el átomo en reposo (Capítulos 2 y 3); fluorescencia y primera detección a 794 nm medidas (sin señal); falta el promedio Doppler |
 
 ## Teoría
 
@@ -95,7 +95,9 @@ Los términos $\propto |\tilde E_3|^2\tilde E_2$ son la reacción del medio sobr
 
 **Absorción.** A este orden, el 794 nm acopla dos niveles vacíos (c ↔ b), así que la señal **no se absorbe**. Quien se absorbe es la semilla de 852 nm, con el mismo $\chi^{(1)}(\omega_3) \propto 1/(\Delta_3 - i\gamma_{ba})$ de la Rama A. Por eso $\tilde E_3$ deja de ser constante a lo largo de la celda.
 
-**Abierto:** la propagación de la Rama B (generación con una semilla que se atenúa), su promedio Doppler y el efecto de una semilla resonante que puebla 6P3/2, que va más allá de este orden perturbativo.
+**Propagación.** La generación de la señal con una semilla que se atenúa está en el Capítulo 3 de la monografía. [`Rama_B/Teoria/capitulo3.ipynb`](Rama_B/Teoria/capitulo3.ipynb) evalúa sus expresiones cerradas para el átomo en reposo.
+
+**Abierto:** el promedio Doppler de la Rama B y el efecto de una semilla resonante que puebla 6P3/2, que va más allá de este orden perturbativo.
 
 ## Hoja de ruta por rama
 
@@ -116,9 +118,10 @@ Los términos $\propto |\tilde E_3|^2\tilde E_2$ son la reacción del medio sobr
 | Parte | Estado | Dónde |
 |---|---|---|
 | $\rho_{cb}^{(3)}$ y $\chi^{(3)}_B$ | Derivados (expresiones de arriba) | [`Rama_B/`](Rama_B/) |
-| Evaluación numérica de $\chi^{(3)}_B$ en el plano de las perillas (Δ2, Δ3) | Pendiente | [`Rama_B/Teoria/`](Rama_B/Teoria/) |
-| Propagación con semilla de 852 nm absorbida y promedio Doppler | Pendiente | [`Rama_B/Teoria/`](Rama_B/Teoria/) |
-| $\gamma_{cb}$ en `constants.py` | Pendiente. En el límite puramente radiativo, $\gamma_{cb} = \gamma_{ba} + \gamma_{ca}$ | — |
+| Susceptibilidades de la Rama B en el plano de las perillas (Δ2, Δ3), átomo en reposo | Hecho | [`Rama_B/Teoria/capitulo2.ipynb`](Rama_B/Teoria/capitulo2.ipynb) |
+| Propagación con semilla de 852 nm absorbida, átomo en reposo (Figuras 3.1–3.3) | Hecho | [`Rama_B/Teoria/capitulo3.ipynb`](Rama_B/Teoria/capitulo3.ipynb) |
+| Promedio Doppler de la Rama B | Pendiente | — |
+| Longitud de la celda (71.8 mm, valor del PDF) | Por confirmar con el laboratorio | [`constants.py`](constants.py) |
 | Fluorescencia (PMT): 822 solo, 852 solo y 852 con el 822 fijo, de 50 a 80 °C | Hecho | [`Rama_B/Fluorescencia/`](Rama_B/Fluorescencia/) |
 | Detección directa a 794 nm (monocromador → SPCM), 60 °C | Medido: sin señal; el fondo de B es luz de 852 y 822 que el monocromador no rechaza | [`Rama_B/Deteccion_794/`](Rama_B/Deteccion_794/) |
 | Calibración del monocromador en 794 nm y filtro interferencial antes de la fibra | Pendiente | — |
@@ -130,10 +133,14 @@ Los términos $\propto |\tilde E_3|^2\tilde E_2$ son la reacción del medio sobr
 ├── README.md
 ├── constants.py                    # única fuente de constantes físicas (ver abajo)
 ├── Caracterizacion_Haces/          # común: cintura e intensidad de los haces de 822 y 852 nm
-│   ├── 822.py, 852.py, waist_both.py
-│   └── data/{822nm,852nm}/         # perfiles z<pos>mm.xlsx del BeamMaster (se copian aparte)
+│   ├── waist_both.py
+│   └── data/, data2/, data3/, old-data/   # perfiles z<pos>mm-<822|852>.xlsx del BeamMaster
+├── Monochromators/                 # respuesta del monocromador al 852 y al 822
+│   ├── monocromador.ipynb
+│   └── data/
 ├── Rama_A/                         # semilla 794 → señal 852
 │   ├── Teoria/                     # χ(1) y χ(3) en reposo y con Doppler
+│   │   └── Susceptibilidades.ipynb, Suceptibilidades_Doppler.ipynb
 │   ├── Fluorescencia/              # etapa 1: PMT con 822 solo y con 822 + 794
 │   │   ├── 2Lasers.ipynb
 │   │   ├── data/                   # canal A (6 columnas)
@@ -142,13 +149,16 @@ Los términos $\propto |\tilde E_3|^2\tilde E_2$ son la reacción del medio sobr
 │       ├── FWM.ipynb
 │       └── data/2026-09-07/
 └── Rama_B/                         # semilla 852 → señal 794
-    ├── Teoria/
+    ├── Teoria/                     # átomo en reposo: susceptibilidades y propagación
+    │   ├── capitulo2.ipynb         # figuras F1–F5 del Capítulo 2
+    │   ├── capitulo3.ipynb         # Figuras 3.1–3.3 del Capítulo 3
+    │   └── figuras/                # PDF que generan los dos cuadernos
     ├── Fluorescencia/              # PMT: 822 solo, 852 solo y 852 con el 822 fijo
     │   ├── fluorescencia.ipynb, fluorescencia_temperatura.ipynb
     │   └── data/
     └── Deteccion_794/              # monocromador + SPCM hacia adelante, 852 barrido con el 822 fijo
-        ├── FWM.ipynb
-        └── data/
+        ├── FWM.ipynb, FWM_new-data.ipynb
+        └── data/, new-data/
 ```
 
 Cada carpeta tiene su propio `README.md`. Ahí se explica en qué consiste el experimento o el cálculo, cómo se ajustan los datos, la estructura interna de los archivos de medida y el formato de sus nombres:
@@ -167,11 +177,11 @@ python -m venv .venv
 pip install numpy scipy matplotlib pandas openpyxl ipykernel
 ```
 
-Los notebooks se abren **desde su propia carpeta** (por ejemplo `cd Rama_A/Deteccion_852`). Cada uno agrega la raíz del repositorio a `sys.path` con `sys.path.append('../..')` para importar `constants.py`, y lee sus datos con rutas relativas (`data/...`). En Colab, primero hay que clonar el repositorio y luego hacer `%cd` a la subcarpeta. Los scripts de `Caracterizacion_Haces/` buscan sus datos en `data/` junto al script.
+Los notebooks se abren y se ejecutan **desde su propia carpeta** (por ejemplo `cd Rama_A/Deteccion_852`). Cada uno agrega la raíz del repositorio a `sys.path` con `sys.path.append('../..')` para importar `constants.py`, y lee sus datos con rutas relativas (`data/...`). En Colab, primero hay que clonar el repositorio y luego hacer `%cd` a la subcarpeta. Los scripts de `Caracterizacion_Haces/` buscan sus datos en `data/` junto al script.
 
 ## Constantes globales
 
-`constants.py` es la única fuente de las constantes. Para cambiar un valor (por ejemplo la temperatura `T[K]`), se edita ahí y todos los notebooks usan el nuevo valor.
+`constants.py` es la única fuente de las constantes. Para cambiar un valor (por ejemplo la temperatura `T[K]`), se edita ahí y todos los notebooks usan el nuevo valor. La fuente de cada valor está en los comentarios del archivo.
 
 ### Diccionario `cte`
 
@@ -184,30 +194,33 @@ Las unidades van en el nombre de cada clave (todo en SI):
 | `kB[J/K]` | Constante de Boltzmann |
 | `eps0[F/m]` | Permitividad del vacío |
 | `m_Cs[kg]` | Masa atómica del Cs |
-| `T[K]` | Temperatura |
-| `nu_ba[Hz]`, `nu_ca[Hz]` | Frecuencias de transición 6S1/2 → 6P3/2 (D2) y 6S1/2 → 8S1/2 |
-| `gamma_ba[rad/s]`, `gamma_ca[rad/s]` | Tasas de decaimiento de las coherencias ba y ca |
+| `T[K]` | Temperatura con la que se calcula la velocidad térmica `u` (296 K); no es la de la celda |
+| `e_a0[C*m]` | Unidad atómica de momento dipolar, $ea_0$ |
+| `nu_ba[Hz]`, `nu_ca[Hz]` | Frecuencias de transición 6S1/2 → 6P3/2 (D2) y 6S1/2 → 8S1/2 (centroides) |
+| `gamma_ba[rad/s]`, `gamma_ca[rad/s]`, `gamma_cb[rad/s]` | Tasas de decaimiento de las coherencias ba, ca y cb. En el límite radiativo, $\gamma_{cb} = \gamma_{ba} + \gamma_{ca}$ |
 | `tau_8S[s]` | Vida media del nivel 8S1/2 |
-| `d_D2[C*m]` | Elemento reducido de la D2, $\langle J=1/2\Vert e\mathbf r\Vert J'=3/2\rangle$ (Steck) |
-| `L_celda[m]` | Longitud de la celda de Cs (por verificar) |
-| `Pv_A_sol`, `Pv_B_sol[K]`, `Pv_A_liq`, `Pv_B_liq[K]` | Presión de vapor del Cs (Steck): $\log_{10}(P/\mathrm{Torr}) = A - B/T$, fases sólida y líquida |
-| `T_fus[K]`, `Torr[Pa]` | Punto de fusión del Cs y conversión Torr → Pa |
-
-$\gamma_{cb}$, que necesita la Rama B, todavía no está definida.
+| `d_D2[C*m]` | Elemento reducido de la D2, $\langle 6S_{1/2}\Vert e\mathbf r\Vert 6P_{3/2}\rangle$ |
+| `d_8S_6P32[C*m]` | Elemento reducido $\langle 8S_{1/2}\Vert e\mathbf r\Vert 6P_{3/2}\rangle$ (794 nm) |
+| `L_celda[m]` | Longitud de la celda de Cs: 71.8 mm, valor del PDF, por confirmar con el laboratorio |
 
 ### Variables derivadas
 
 | Variable | Descripción |
 |---|---|
 | `c`, `hbar`, `kB`, `eps0` | Atajos de las constantes fundamentales |
-| `g_ba`, `g_ca` | Atajos de `gamma_ba` y `gamma_ca` [rad/s] |
+| `g_ba`, `g_ca`, `g_cb` | Atajos de `gamma_ba`, `gamma_ca` y `gamma_cb` [rad/s] |
+| `G_ab` | Tasa de decaimiento de población \|b⟩ → \|a⟩, $\Gamma_{ab} = 2\gamma_{ba}$ en el límite radiativo [rad/s] |
 | `w_ba`, `w_ca`, `w_cb` | Frecuencias angulares de transición [rad/s] |
 | `lmd1`, `lmd2`, `lmd3` | Longitudes de onda en resonancia: 822, 794 y 852 nm [m] |
 | `k1`, `k2`, `k3` | Números de onda correspondientes [rad/m] |
-| `u` | Velocidad térmica más probable del Cs [m/s] |
-| `mu_ba` | Dipolo de dos niveles de la D2, $\lvert\langle J\Vert e\mathbf r\Vert J'\rangle\rvert/\sqrt2$, que reproduce $\Gamma_{D2} = 2\gamma_{ba}$ [C·m] |
+| `u` | Velocidad térmica más probable del Cs a `T[K]` [m/s] |
+| `mu_ba` | Dipolo efectivo de dos niveles de la D2, $\lvert\langle 6S_{1/2}\Vert e\mathbf r\Vert 6P_{3/2}\rangle\rvert/2$, que reproduce $\Gamma_{D2} = 2\gamma_{ba}$ [C·m] |
+| `mu_cb` | Dipolo efectivo de dos niveles de 8S1/2 ↔ 6P3/2, $\lvert\langle 8S_{1/2}\Vert e\mathbf r\Vert 6P_{3/2}\rangle\rvert/\sqrt2$ [C·m] |
 | `L_celda` | Atajo de `L_celda[m]` [m] |
-| `n_Cs(T)` | Función: densidad de Cs [m⁻³] a la temperatura de la celda `T` [K], a partir de la presión de vapor |
+| `T_FUSION_CS` | Punto de fusión del Cs [°C] |
+| `n_Cs(T)` | Función: densidad del vapor saturado de Cs [m⁻³] a la temperatura de la celda `T` [°C], con la presión de vapor del Cs líquido de Steck, ec. (4.2) de la monografía. Avisa si `T` está por debajo del punto de fusión |
+
+Los dipolos efectivos `mu_ba` y `mu_cb` corresponden a un átomo de dos niveles sin degeneración: las formas de las resonancias son correctas, pero las magnitudes absolutas llevan un factor de orden 1 por la polarización.
 
 ### Uso
 

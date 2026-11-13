@@ -1,6 +1,6 @@
 # Rama B: se siembra 852 nm, se genera 794 nm
 
-**Estado:** hay datos y análisis de fluorescencia en [`Fluorescencia/`](Fluorescencia/) y de la detección directa a 794 nm en [`Deteccion_794/`](Deteccion_794/), donde no se detecta señal porque el fondo es luz de 852 y 822 nm que el monocromador no rechaza. [`Teoria/`](Teoria/) solo tiene la estructura, con la misma organización que la [Rama A](../Rama_A/).
+**Estado:** hay datos y análisis de fluorescencia en [`Fluorescencia/`](Fluorescencia/) y de la detección directa a 794 nm en [`Deteccion_794/`](Deteccion_794/), donde no se detecta señal porque el fondo es luz de 852 y 822 nm que el monocromador no rechaza. [`Teoria/`](Teoria/) tiene los cuadernos de los Capítulos 2 y 3 de la monografía, que evalúan las susceptibilidades y la propagación de esta rama para el átomo en reposo; falta el promedio Doppler.
 
 El bombeo de 822 nm lleva los átomos de 6S1/2 a 8S1/2 por absorción de dos fotones, y la semilla de 852 nm (6S1/2 ↔ 6P3/2) cierra el lazo. El medio radía el campo de 794 nm (8S1/2 → 6P3/2) en la dirección de ajuste de fase, $2k_1 - k_3 = k_2$, hacia adelante.
 
@@ -19,12 +19,14 @@ La derivación está en el [README principal](../README.md#rama-b-se-genera-794-
 
 | Carpeta | Contenido | Estado |
 |---|---|---|
-| [`Teoria/`](Teoria/) | Evaluación numérica de $\chi^{(3)}_B$, propagación con semilla absorbida y promedio Doppler | Pendiente |
+| [`Teoria/`](Teoria/) | `capitulo2.ipynb`: susceptibilidades de la Rama B (figuras F1–F5). `capitulo3.ipynb`: propagación con semilla absorbida (Figuras 3.1–3.3) | Hecho para el átomo en reposo; falta el promedio Doppler |
 | [`Fluorescencia/`](Fluorescencia/) | Fluorescencia azul (PMT): barridos del 822 solo, del 852 solo y del 852 con el 822 fijo | Hecho |
 | [`Deteccion_794/`](Deteccion_794/) | Detección directa hacia adelante a 794 nm (monocromador + SPCM), con el 852 barrido y el 822 fijo | Medido: sin señal por encima del fondo de 852 y 822 nm |
 
 ## Pendiente
 
-- Agregar $\gamma_{cb}$ a [`constants.py`](../constants.py). En el límite puramente radiativo, $\gamma_{cb} = \gamma_{ba} + \gamma_{ca}$.
+- Promedio Doppler de las susceptibilidades y de la propagación de la Rama B (ver [`Teoria/`](Teoria/)).
+- Confirmar con el laboratorio la longitud de la celda: [`constants.py`](../constants.py) usa el valor del PDF, 71.8 mm.
+- Fijar los valores marcados `PENDIENTE` en `Teoria/capitulo3.ipynb`, que no están en el PDF ni en `constants.py` (ver [`Teoria/README.md`](Teoria/README.md)).
 - Calibrar el monocromador en 794 nm y bloquear el 822 y el 852 antes de la fibra con un filtro interferencial (ver [`Deteccion_794/`](Deteccion_794/)).
-- Tener en cuenta el efecto abierto de una semilla resonante con la D2, que puebla 6P3/2 y va más allá del orden perturbativo usado.
+- Tener en cuenta el efecto abierto de una semilla resonante con la D2, que puebla 6P3/2 y va más allá del orden perturbativo usado. La sección 5 de `Teoria/capitulo3.ipynb` imprime $\rho_{bb}^{(2)}$ para la semilla de la medida; el modelo perturbativo exige $\rho_{bb}^{(2)} \ll 1$.
